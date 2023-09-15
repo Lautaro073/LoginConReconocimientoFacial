@@ -20,8 +20,26 @@ def Log_Biometric():
         # Resize
         frame = imutils.resize(frame, width=1280, height=720)
 
+        # RGB
+        frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+
         # Frame Show
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        if ret == True:
+            # Inference Face Mesh
+            res = FaceMesh.process(frameRGB)
+
+            # Result List
+            px = []
+            py = []
+            lista = []
+            if res.multi_face_landmarks:
+             # Extract Face Mesh
+              for rostros in res.multi_face_landmarks:
+                  # Draw
+                   mpDraw.draw_landmarks(frame, rostros, FacemeshObject.FACE_CONNECTIONS, ConfigDraw, ConfigDraw)
+
 
         # Conv Video
         im = Image.fromarray(frame)
@@ -124,8 +142,32 @@ OutFolderPathFace= './Database/Faces'
 # Variables
 
 
+# Offset
+offsety = 30
+offsetx = 20
+
 # Info List
 info = []
+
+
+# threshold
+confThreshold = 0.5
+
+# Tool Draw
+mpDraw = mp.solutions.drawing_utils
+ConfigDraw = mpDraw.DrawingSpec(thickness = 1, circle_radius=1)
+
+# Object Face Mesh
+FacemeshObject = mp.solutions.face_mesh
+FaceMesh = FacemeshObject.FaceMesh(max_num_faces=1)
+
+# Object Face Detect
+FaceObject = mp.solutions.face_detection
+detector = FaceObject.FaceDetection(min_detection_confidence=0.5, model_selection=1)
+
+
+
+
 
 # Ventana Principal
 
