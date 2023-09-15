@@ -18,7 +18,7 @@ def Log_Biometric():
         ret, frame = cap.read()
 
         # Resize
-        frame = imutils.resize(frame, width=1280)
+        frame = imutils.resize(frame, width=1280, height=720)
 
         # Frame Show
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -116,16 +116,13 @@ def Sign():
     print("chau")
 
 # Path
-OutFolderPathUser= 'C:/Users/El Yisus Pai/Desktop/LAB IV/Unidad 4/punto 4/FaceRecognitionAntoSpoofing/Database/Users'
-PathUserCheck= 'C:/Users/El Yisus Pai/Desktop/LAB IV/Unidad 4/punto 4/FaceRecognitionAntoSpoofing/Database/Users'
-OutFolderPathFace= 'C:/Users/El Yisus Pai/Desktop/LAB IV/Unidad 4/punto 4/FaceRecognitionAntoSpoofing/Database/Faces'
+OutFolderPathUser= './Database/Users'
+PathUserCheck= './Database/Users'
+OutFolderPathFace= './Database/Faces'
 
 
 # Variables
-parpadeo = false
-conteo = 0
-muestra = 0
-step = 0
+
 
 # Info List
 info = []
@@ -137,7 +134,7 @@ pantalla.title("FACE RECOGNITION SYSTEM")
 pantalla.geometry("1280x720")
 
 # Fondo
-imagenF = PhotoImage(file="C:/Users/El Yisus Pai/Desktop/LAB IV/Unidad 4/punto 4/FaceRecognitionAntoSpoofing/SetUp/Inicio.png")
+imagenF = PhotoImage(file="./SetUp/Inicio.png")
 background = Label(image = imagenF, text="Inicio")
 background.place(x=0, y=0, relheight=1, relwidth=1)
 
@@ -165,12 +162,12 @@ InputPassLog.place(x=750, y=500)
 
 # Button
 # Log
-imagenBR = PhotoImage(file="C:/Users/El Yisus Pai/Desktop/LAB IV/Unidad 4/punto 4/FaceRecognitionAntoSpoofing/SetUp/BtLogin.png")
+imagenBR = PhotoImage(file="./SetUp/BtLogin.png")
 BtReg = Button(pantalla, text="Registro", image=imagenBR, height="40", width="200", command=Log)
 BtReg.place(x=300, y=580)
 
 # Sig
-imagenBL = PhotoImage(file="C:/Users/El Yisus Pai/Desktop/LAB IV/Unidad 4/punto 4/FaceRecognitionAntoSpoofing/SetUp/BtSign.png")
+imagenBL = PhotoImage(file="./SetUp/BtSign.png")
 BtSign = Button(pantalla, text="Registro", image=imagenBL, height="40", width="200", command=Sign)
 BtSign.place(x=900, y=580)
 
