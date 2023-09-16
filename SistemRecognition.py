@@ -41,6 +41,116 @@ def Log_Biometric():
                    mpDraw.draw_landmarks(frame, rostros, FacemeshObject.FACE_CONNECTIONS, ConfigDraw, ConfigDraw)
 
 
+                  # Extract KeyPoint
+                   for id, puntos in enumerate(rostros.landmark):
+
+                       # Info img
+                        al, an, c = frame.shape
+                        x, y = int(puntos.x * an), int(puntos.y * al)
+                        px.append(x)
+                        py.append(y)
+                        lista.append([id, x, y])
+
+                        # 468 KeyPoints
+                        if len(lista)== 468:
+                            # Ojo Derecho
+                            x1, y1 = lista[145][1:]
+                            x2, y2 = lista[159][1:]
+                            longitud1 = math.hypot(x2-x1, y2-y1)
+
+                            # Ojo Izquierdo
+                            x3, y3= lista[374][1:]
+                            x4, y4= lista[386][1:]
+                            longitud2 = math.hypot(x4 - x3, y4 - y3)
+
+                            # Parietal Derecho
+                            x5, y5 = lista[139][1:]
+                            # Parietal Izquierdo
+                            x6, y6 = lista[368][1:]
+
+                            # Ceja Derecha
+                            x7, y7 = lista[70][1:]
+
+                            x8, y8 = lista[300][1:]
+
+
+
+                            # Face Detecte
+                            faces = detector.process(frameRGB)
+
+                            if faces.detections is not None:
+                                for face in faces.detections:
+
+                                    # bbox: "ID, BBOX, SCORE"
+                                    score = face.score
+                                    score = score[0]
+                                    bbox = face.location_data.relative_bounding_box
+
+                                    # Threshold
+                                    if score > confThreshold:
+                                        # Pixels
+                                        xi, yi, anc, alt = bbox.xmin, bbox.ymin, bbox.width, bbox.height
+                                        xi, yi, anc, alt = int(xi * anc), int(yi * alt), int(anc * an), int(alt * al)
+
+                                        # Offset x
+                                        offsetan = (offsetx / 100) * anc
+                                        xi = int(xi - int(offsetan/2))
+                                        anc = int(anc + offsetan)
+
+                                        # Offset y
+                                        offsetal = (offsety / 100) * alt
+                                        yi = int(yi - offsetal)
+                                        alt = int(alt + offsetal)
+
+                                        # Error
+                                        if xi < 0: xi = 0
+                                        if yi < 0: yi = 0
+                                        if anc < 0: anc = 0
+                                        if alt < 0: anc = 0
+
+                                        # Steps
+                                        if step == 0:
+                                          # Drawn
+                                          cv2.rectangle(frame, (xi, yi, anc, alt),(255, 0, 255), 2)
+
+                                          # IMG Step0
+                                        als0, ans0, c = img_step0.shape
+                                        frame[50:50 + als0, 50:50 + ans0] = img_step0
+                                        # IMG Step1
+                                        als1, ans1, c = img_step1.shape
+                                        frame[50:50 + als1, 1030:1030 + ans1] = img_step1
+                                        # IMG Step2
+                                        desired_height, desired_width = 250, 200
+                                        img_step2_resized = cv2.resize(img_step2, (desired_width, desired_height))
+                                        frame[270:270 + desired_height, 1030:1030 + desired_width] = img_step2_resized
+
+                                        # Face Center
+                                        if x7 > x5 and x8 < x6:
+                                            # IMG Check
+                                            alch, anch, c = img_check.shape
+                                            frame[165:165 + alch, 1105:1105 + anch] = img_check
+
+                                            # Cont Parpadeo
+                                            if longitud1 <= 10 and longitud2 <= 10 and parpadeo == False:
+                                                conteo = conteo + 1
+                                                parpadeo = True
+
+                                            elif longitud1 > 10 and longitud2 > 10 and parpadeo == True:
+                                                parpadeo = False
+
+                                                cv2.putText(frame, f'Parpadeos: {int(conteo)}', (1070, 375), cv2.FONT_HERSHEY_COMPLEX,0.5, (255, 255, 255), 1)
+                                            else:
+                                                conteo = 0
+
+
+
+
+
+
+                            # Circulos
+                            #cv2.circle(frame, (x1,y1), 2, (255, 0, 0), cv2.FILED)
+                            #cv2.circle(frame, (x2, y2), 2, (255, 0, 0), cv2.FILED)
+
         # Conv Video
         im = Image.fromarray(frame)
         img = ImageTk.PhotoImage(image=im)
@@ -138,12 +248,22 @@ OutFolderPathUser= './Database/Users'
 PathUserCheck= './Database/Users'
 OutFolderPathFace= './Database/Faces'
 
+# Read img
+img_info = cv2.imread("./SetUp/info.png")
+img_check = cv2.imread("./SetUp/check.png")
+img_step0 = cv2.imread("./SetUp/Step0.png")
+img_step1 = cv2.imread("./SetUp/Step1.png")
+img_step2 = cv2.imread("./SetUp/Step2.png")
+img_liche = cv2.imread("./SetUp/LivenessCheck.png")
 
 # Variables
-
+parpadeo = False
+conteo = 0
+muestra = 0
+step = 0
 
 # Offset
-offsety = 30
+offsety = 40
 offsetx = 20
 
 # Info List
