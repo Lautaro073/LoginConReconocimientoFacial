@@ -17,6 +17,9 @@ def Log_Biometric():
     if cap is not None:
         ret, frame = cap.read()
 
+        # Invierte horizontalmente para corregir el modo espejo
+        frame = cv2.flip(frame, 1)
+
         # Resize
         frame = imutils.resize(frame, width=1280, height=720)
 
