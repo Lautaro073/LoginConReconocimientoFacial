@@ -90,7 +90,7 @@ def Log_Biometric():
                                     if score > confThreshold:
                                         # Pixels
                                         xi, yi, anc, alt = bbox.xmin, bbox.ymin, bbox.width, bbox.height
-                                        xi, yi, anc, alt = int(xi * anc), int(yi * alt), int(anc * an), int(alt * al)
+                                        xi, yi, anc, alt = int(xi * an), int(yi * al), int(anc * an), int(alt * al)
 
                                         # Offset x
                                         offsetan = (offsetx / 100) * anc
@@ -138,7 +138,7 @@ def Log_Biometric():
                                             elif longitud1 > 10 and longitud2 > 10 and parpadeo == True:
                                                 parpadeo = False
 
-                                                cv2.putText(frame, f'Parpadeos: {int(conteo)}', (1070, 375), cv2.FONT_HERSHEY_COMPLEX,0.5, (255, 255, 255), 1)
+                                                cv2.putText(frame, f'Parpadeos: {int(conteo)}', (1070, 425), cv2.FONT_HERSHEY_COMPLEX,0.5, (255, 255, 255), 1)
                                             else:
                                                 conteo = 0
 
